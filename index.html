@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    .box {
+        width: 50vw;
+        height: 50vh;
+        margin: 500px auto;
+    }
+</style>
+
+<body>
+    <canvas class="box">
+    </canvas>
+    <button onclick="takePhoto()">jietu1</button>
+</body>
+<script>
+    // 开启视像头并展示在canvas上
+    const video = document.createElement('video');
+    video.autoplay = true;
+    video.muted = true;
+    video.playsInline = true;
+    video.style.width = '50%';
+    video.style.height = '50%';
+    document.body.appendChild(video);
+
+    const canvas = document.querySelector('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = 640;
+    canvas.height = 480;
+
+    const constraints = {
+        video: {
+            width: 640,
+            height: 480,
+            facingMode: 'user'
+        }
+    };
+
+    async function init() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia(constraints);
+            handleSuccess(stream);
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    function handleSuccess(stream) {
+        window.stream = stream;
+        video.srcObject = stream;
+    }
+
+    init();
+
+    // 画面截图
+    function takePhoto() {
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const data = canvas.toDataURL('image/png');
+        console.log(data);
+        //下载图片
+        const a = document.createElement('a');
+        a.href = data;
+        a.download = 'photo.png';
+        a.click();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+</html>
